@@ -66,6 +66,7 @@ for feed_url in RSS_FEEDS:
         method = 'published'
     else:
         method = 'updated'
+    print(method)
     for item in feed.entries:
         if method == 'published':
             if latest_item is None or item.published_parsed > latest_item.published_parsed:
