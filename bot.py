@@ -104,7 +104,8 @@ for feed_url in RSS_FEEDS:
         result = requests.post(URL,data=post_data)
         if result.status_code == 200:
             print(f'POSTED: {latest_item.title}')
-        #print(result.text)
+        else:
+            print(result.text)
     else:
         print(f'ALREADY POSTED:{latest_item.title}')
         continue
