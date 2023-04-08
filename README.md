@@ -1,11 +1,14 @@
 # RSS2Toot
+
 An Python program which uses GitHub Actions to forward RSS feed updates to Mastodon
------
+
 ## Requirements
+
 - A Mastodon Account
 - A supabase-based Postgres Database (Or other Postgres Databases)
 
 ## Deployment
+
 1. Fork this repo
 2. Go to `Settings > Actions > Secrets` and set these three secrets:
    - DB_PASSWORD
