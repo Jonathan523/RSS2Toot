@@ -86,7 +86,7 @@ for feed_url in RSS_FEEDS:
         print(result)
         print(result.text)
     else:
-        print(f'Posted:{latest_item.title})
+        print(f'Posted:{latest_item.title}')
         continue
 
 cur.close()
