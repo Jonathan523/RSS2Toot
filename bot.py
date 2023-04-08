@@ -1,4 +1,3 @@
-
 import feedparser
 import psycopg2
 import requests
@@ -17,6 +16,8 @@ ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 
 URL = f'https://{MASTODON_HOST}/api/v1/statuses?access_token={ACCESS_TOKEN}'
 
+titles = []
+links = []
 # RSS源列表，请修改为您需要订阅的RSS源链接
 RSS_FEEDS = [
     "http://www.ruanyifeng.com/blog/atom.xml",
@@ -63,9 +64,13 @@ for feed_url in RSS_FEEDS:
         conn.commit()
 
         # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
+        links.append(link)
+        titles.append(title)
         post_data = f'{"status": "{link} \n {title}"}'
         result = requests.post(URL, data=post_data)
         print(result.text)
 
 cur.close()
 conn.close()
+for i in range(0,len(links)-1):
+    print(f'{links[i]}--{titles[i]}')
