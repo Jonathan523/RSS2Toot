@@ -81,6 +81,7 @@ for feed_url in RSS_FEEDS:
                 VALUES (%s, %s, %s)
             """, (latest_item.title, latest_item.link, latest_item.published))
             conn.commit()
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
         if cur.fetchone() is not None:
             print(f'ALREADY POSTED:{latest_item.title}')
             continue
@@ -93,6 +94,7 @@ for feed_url in RSS_FEEDS:
                     VALUES (%s, %s, %s)
                 """, (latest_item.title, latest_item.link, latest_item.updated))
                 conn.commit()
+            cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
             if cur.fetchone() is not None:
                 print(f'ALREADY POSTED:{latest_item.title}')
                 continue
