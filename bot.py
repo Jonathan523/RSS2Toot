@@ -96,13 +96,17 @@ for feed_url in RSS_FEEDS:
         # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
         print(latest_item.link,end=' ---- ')
         print(latest_item.title)
-        post_data = {"status": f"{latest_item.title} \n {latest_item.link}"}
+        if 'github' in latest_item.link:
+            post_data = {"status": f"{latest_item.title} \n{latest_item.description} \n{latest_item.link}"}
+        else:
+            post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
         #print(f'"{post_data}"')
         result = requests.post(URL,data=post_data)
-        print(result)
+        if result.status_code == 200:
+            print(f'POSTED: {latest_item.title}')
         #print(result.text)
     else:
-        print(f'ALREADY posted:{latest_item.title}')
+        print(f'ALREADY POSTED:{latest_item.title}')
         continue
 cur.close()
 conn.close()
