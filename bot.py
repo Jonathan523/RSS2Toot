@@ -49,9 +49,10 @@ conn.commit()
 
 # 检查每个RSS源的最新项目并将其插入到数据库中
 for feed_url in RSS_FEEDS:
+    print(f'Checking {feed_url}')
     feed = feedparser.parse(feed_url)
     latest_item = None
-
+    print(feed.entries)
     for item in feed.entries:
         if latest_item is None or item.published_parsed > latest_item.published_parsed:
             latest_item = item
@@ -67,6 +68,8 @@ for feed_url in RSS_FEEDS:
         # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
         links.append(latest_item.link)
         titles.append(latest_item.title)
+        print(latest_item.link)
+        print(latest_item.title)
         post_data = {"status": f"{latest_item.link} \n {latest_item.title}"}
         post_data = json.dumps(post_data)
         result = requests.post(URL, data=post_data)
