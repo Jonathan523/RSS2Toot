@@ -69,14 +69,14 @@ for feed_url in RSS_FEEDS:
         titles.append(latest_item.title)
         print(latest_item.link)
         print(latest_item.title)
-        post_data = {"status": f"{latest_item.link} \n {latest_item.title}"}
+        post_data = {"status": f"{latest_item.title} \n {latest_item.link}"}
         post_data = json.dumps(post_data)
-        print(post_data)
-        result = requests.post(URL, data=post_data)
+        print(f'"{post_data}"')
+        result = requests.post(URL,data=post_data)
         print(result)
         print(result.text)
 
 cur.close()
 conn.close()
 for i in range(0,len(links)-1):
-    print(f'{links[i]}--{titles[i]}')
+    print(f'{titles[i]} -- {links[i]}')
