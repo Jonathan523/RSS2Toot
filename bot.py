@@ -15,7 +15,7 @@ DB_PORT = os.environ['DB_PORT']
 MASTODON_HOST=os.environ['MASTODON_HOST']
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 
-URL = f'https://{MASTODON_HOST}//api/v1/statuses?access_token={ACCESS_TOKEN}'
+URL = f'https://{MASTODON_HOST}/api/v1/statuses?access_token={ACCESS_TOKEN}'
 
 # RSS源列表，请修改为您需要订阅的RSS源链接
 RSS_FEEDS = [
