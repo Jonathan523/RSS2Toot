@@ -63,6 +63,7 @@ for feed_url in RSS_FEEDS:
     latest_item = None
     # print(feed.entries)
     for item in feed.entries:
+        print(item.published_parsed)
         if latest_item is None or item.published_parsed > latest_item.published_parsed:
             latest_item = item
 
@@ -85,6 +86,7 @@ for feed_url in RSS_FEEDS:
         print(result)
         print(result.text)
     else:
+        print(f'Posted:{latest_item.title})
         continue
 
 cur.close()
