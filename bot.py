@@ -97,18 +97,18 @@ for feed_url in RSS_FEEDS:
             print(f'ALREADY POSTED:{latest_item.title}')
             continue
 
-        # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
-        print(latest_item.link,end=' ---- ')
-        print(latest_item.title)
-        # if 'github' in latest_item.link:
-            # post_data = {"status": f"{latest_item.title} \n{latest_item.description} \n{latest_item.link}"}
-        # else:
-            # post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-        post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-        result = requests.post(URL,data=post_data)
-        if result.status_code == 200:
-            print(f'POSTED: {latest_item.title}')
-        else:
-            print(result.text)
+    # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
+    print(latest_item.link,end=' ---- ')
+    print(latest_item.title)
+    # if 'github' in latest_item.link:
+        # post_data = {"status": f"{latest_item.title} \n{latest_item.description} \n{latest_item.link}"}
+    # else:
+        # post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+    post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+    result = requests.post(URL,data=post_data)
+    if result.status_code == 200:
+        print(f'POSTED: {latest_item.title}')
+    else:
+        print(result.text)
 cur.close()
 conn.close()
