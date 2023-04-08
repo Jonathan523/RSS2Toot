@@ -64,9 +64,9 @@ for feed_url in RSS_FEEDS:
         conn.commit()
 
         # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
-        links.append(link)
-        titles.append(title)
-        post_data = f'{"status": "{link} \n {title}"}'
+        links.append(latest_item.link)
+        titles.append(latest_item.title)
+        post_data = f'{"status": "{latest_item.link} \n {latest_item.title}"}'
         result = requests.post(URL, data=post_data)
         print(result.text)
 
