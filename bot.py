@@ -65,36 +65,36 @@ for feed_url in RSS_FEEDS:
     for item in feed.entries:
         try:
                 #print(item.published_parsed)
-                tmp = item.published
                 if latest_item is None or item.published_parsed > latest_item.published_parsed:
                     latest_item = item
         except AttributeError:
             continue
         except KeyError:
             continue
+    try:
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
+        if cur.fetchone() is None:
+            cur.execute("""
+                INSERT INTO rss_items (title, link, published)
+                VALUES (%s, %s, %s)
+            """, (latest_item.title, latest_item.link, latest_item.published))
+            conn.commit()
 
-    cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
-    if cur.fetchone() is None:
-        cur.execute("""
-            INSERT INTO rss_items (title, link, published)
-            VALUES (%s, %s, %s)
-        """, (latest_item.title, latest_item.link, latest_item.published))
-        conn.commit()
-
-        # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
-        links.append(latest_item.link)
-        titles.append(latest_item.title)
-        print(latest_item.link)
-        print(latest_item.title)
-        post_data = {"status": f"{latest_item.title} \n {latest_item.link}"}
-        print(f'"{post_data}"')
-        result = requests.post(URL,data=post_data)
-        print(result)
-        print(result.text)
-    else:
-        print(f'Posted:{latest_item.title}')
+            # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
+            links.append(latest_item.link)
+            titles.append(latest_item.title)
+            print(latest_item.link)
+            print(latest_item.title)
+            post_data = {"status": f"{latest_item.title} \n {latest_item.link}"}
+            print(f'"{post_data}"')
+            result = requests.post(URL,data=post_data)
+            print(result)
+            print(result.text)
+        else:
+            print(f'Posted:{latest_item.title}')
+            continue
+    except AttributeError:
         continue
-
 cur.close()
 conn.close()
 for i in range(0,len(links)-1):
