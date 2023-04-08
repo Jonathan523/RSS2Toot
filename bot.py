@@ -11,7 +11,6 @@ DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_HOST = os.environ['DB_HOST']
 DB_PORT = os.environ['DB_PORT']
 
-
 MASTODON_HOST=os.environ['MASTODON_HOST']
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 
