@@ -28,14 +28,14 @@ jobs:
         sudo apt-get install libpq-dev -y
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Test with pytest
+    - name: Test bot.py
       run: |
         python bot.py
       env:
         DB_HOST: ${{ secrets.DB_HOST }}
-        DB_USER: ${{ DB_USER }}
+        DB_USER: ${{ vars.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_NAME: ${{ DB_NAME }}
-        DB_PORT: ${{ DB_PORT }}
-        MASTODON_HOST: ${{ secrets.MASTODON_HOST }}
+        DB_NAME: ${{ vars.DB_NAME }}
+        DB_PORT: ${{ vars.DB_PORT }}
+        MASTODON_HOST: ${{ vars.MASTODON_HOST }}
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
