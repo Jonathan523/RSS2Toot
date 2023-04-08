@@ -67,10 +67,12 @@ for feed_url in RSS_FEEDS:
                 #print(item.published_parsed)
                 if latest_item is None or item.published_parsed > latest_item.published_parsed:
                     latest_item = item
-        except AttributeError:
-            continue
-        except KeyError:
-            continue
+        except:
+            try:
+                if latest_item is None or item.updated_parsed > latest_item.updated_parsed:
+                    latest_item = item
+            except:
+                continue
     try:
         cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
         if cur.fetchone() is None:
@@ -79,19 +81,28 @@ for feed_url in RSS_FEEDS:
                 VALUES (%s, %s, %s)
             """, (latest_item.title, latest_item.link, latest_item.published))
             conn.commit()
-
-            # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
-            print(latest_item.link,end=' ---- ')
-            print(latest_item.title)
-            post_data = {"status": f"{latest_item.title} \n {latest_item.link}"}
-            #print(f'"{post_data}"')
-            result = requests.post(URL,data=post_data)
-            print(result)
-            #print(result.text)
-        else:
-            print(f'ALREADY posted:{latest_item.title}')
-            continue
     except AttributeError:
+        try:
+            cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
+            if cur.fetchone() is None:
+                cur.execute("""
+                    INSERT INTO rss_items (title, link, published)
+                    VALUES (%s, %s, %s)
+                """, (latest_item.title, latest_item.link, latest_item.updated))
+                conn.commit()
+        except:
+            continue
+
+        # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
+        print(latest_item.link,end=' ---- ')
+        print(latest_item.title)
+        post_data = {"status": f"{latest_item.title} \n {latest_item.link}"}
+        #print(f'"{post_data}"')
+        result = requests.post(URL,data=post_data)
+        print(result)
+        #print(result.text)
+    else:
+        print(f'ALREADY posted:{latest_item.title}')
         continue
 cur.close()
 conn.close()
