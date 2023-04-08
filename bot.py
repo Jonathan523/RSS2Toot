@@ -63,9 +63,14 @@ for feed_url in RSS_FEEDS:
     latest_item = None
     # print(feed.entries)
     for item in feed.entries:
-        print(item.published_parsed)
-        if latest_item is None or item.published_parsed > latest_item.published_parsed:
-            latest_item = item
+        try:
+                print(item.published_parsed)
+                if latest_item is None or item.published_parsed > latest_item.published_parsed:
+                    latest_item = item
+        except AttributeError:
+            continue
+        except KeyError:
+            continue
 
     cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
     if cur.fetchone() is None:
