@@ -70,7 +70,6 @@ for feed_url in RSS_FEEDS:
         print(latest_item.link)
         print(latest_item.title)
         post_data = {"status": f"{latest_item.title} \n {latest_item.link}"}
-        post_data = json.dumps(post_data)
         print(f'"{post_data}"')
         result = requests.post(URL,data=post_data)
         print(result)
