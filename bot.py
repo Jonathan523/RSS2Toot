@@ -2,19 +2,26 @@
 import feedparser
 import psycopg2
 import requests
+import os
 
 # PostgreSQL数据库连接信息，请修改为您的实际信息
-DB_NAME = "postgres"
-DB_USER = "postgres"
-DB_PASSWORD = "LnBFmMODl2QKM9pz"
-DB_HOST = "db.jwudenrwkkxmfdapbewo.supabase.co"
-DB_PORT = "5432"
+DB_NAME = os.environ['DB_NAME']
+DB_USER = os.environ['DB_USER']
+DB_PASSWORD = os.environ['DB_PASSWORD']
+DB_HOST = os.environ['DB_HOST']
+DB_PORT = os.environ['DB_PORT']
+
+
+MASTODON_HOST=os.environ['MASTODON_HOST']
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+
+URL = f'https://{MASTODON_HOST}//api/v1/statuses?access_token={ACCESS_TOKEN}'
 
 # RSS源列表，请修改为您需要订阅的RSS源链接
 RSS_FEEDS = [
-    "https://rss.feed1.com",
-    "https://rss.feed2.com",
-    "https://rss.feed3.com"
+    "http://www.ruanyifeng.com/blog/atom.xml",
+    "https://feeds.appinn.com/appinns/",
+    "https://sspai.com/feed"
 ]
 
 # 连接到PostgreSQL数据库
@@ -55,12 +62,10 @@ for feed_url in RSS_FEEDS:
         """, (latest_item.title, latest_item.link, latest_item.published))
         conn.commit()
 
-        # 发送HTTP POST请求到example.com，请求内容为标题和链接
-        post_data = {
-            "title": latest_item.title,
-            "link": latest_item.link
-        }
-        requests.post("https://example.com", data=post_data)
+        # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
+        post_data = f'{"status": "{link} \n {title}"}'
+        result = requests.post(URL, data=post_data)
+        print(result.text)
 
 cur.close()
 conn.close()
