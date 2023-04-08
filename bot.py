@@ -81,6 +81,9 @@ for feed_url in RSS_FEEDS:
                 VALUES (%s, %s, %s)
             """, (latest_item.title, latest_item.link, latest_item.published))
             conn.commit()
+        else:
+            print(f'ALREADY POSTED:{latest_item.title}')
+            continue
     except AttributeError:
         try:
             cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
@@ -90,24 +93,24 @@ for feed_url in RSS_FEEDS:
                     VALUES (%s, %s, %s)
                 """, (latest_item.title, latest_item.link, latest_item.updated))
                 conn.commit()
+            else:
+                print(f'ALREADY POSTED:{latest_item.title}')
+                continue
         except:
             continue
 
         # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
         print(latest_item.link,end=' ---- ')
         print(latest_item.title)
-        if 'github' in latest_item.link:
-            post_data = {"status": f"{latest_item.title} \n{latest_item.description} \n{latest_item.link}"}
-        else:
-            post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-        #print(f'"{post_data}"')
+        # if 'github' in latest_item.link:
+            # post_data = {"status": f"{latest_item.title} \n{latest_item.description} \n{latest_item.link}"}
+        # else:
+            # post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+        post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
         result = requests.post(URL,data=post_data)
         if result.status_code == 200:
             print(f'POSTED: {latest_item.title}')
         else:
             print(result.text)
-    else:
-        print(f'ALREADY POSTED:{latest_item.title}')
-        continue
 cur.close()
 conn.close()
