@@ -52,7 +52,7 @@ for feed_url in RSS_FEEDS:
     print(f'Checking {feed_url}')
     feed = feedparser.parse(feed_url)
     latest_item = None
-    print(feed.entries)
+    # print(feed.entries)
     for item in feed.entries:
         if latest_item is None or item.published_parsed > latest_item.published_parsed:
             latest_item = item
