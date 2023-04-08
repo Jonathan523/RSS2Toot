@@ -32,8 +32,7 @@ RSS_FEEDS = [
     "https://github.com/mastodon/mastodon/releases.atom",
     "https://main.iceco.icu/index.xml",
     "https://www.cestlavie.moe/index.xml",
-    "https://github.com/Chanzhaoyu/chatgpt-web/releases.atom
-"
+    "https://github.com/Chanzhaoyu/chatgpt-web/releases.atom"
 ]
 
 # 连接到PostgreSQL数据库
