@@ -62,23 +62,18 @@ for feed_url in RSS_FEEDS:
     print(f'Checking {feed_url}')
     feed = feedparser.parse(feed_url)
     latest_item = None
-    # print(feed.entries)
+    if 'published' in str(feed.entries[0].items()):
+        method = 'published'
+    else:
+        method = 'updated'
     for item in feed.entries:
-        try:
-                #print(item.published_parsed)
-                if latest_item is None or item.published_parsed > latest_item.published_parsed:
-                    latest_item = item
-        except:
-            try:
-                if latest_item is None or item.updated_parsed > latest_item.updated_parsed:
-                    latest_item = item
-            except:
-                continue
-    try:
-        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
-        if cur.fetchone() is not None:
-            print(f'ALREADY POSTED:{latest_item.title}')
-            continue
+        if method == 'published':
+            if latest_item is None or item.published_parsed > latest_item.published_parsed:
+                latest_item = item
+        elif method == 'updated':
+            if latest_item is None or item.updated_parsed > latest_item.updated_parsed:
+                latest_item = item
+    if method == 'published':
         cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
         if cur.fetchone() is None:
             cur.execute("""
@@ -86,20 +81,19 @@ for feed_url in RSS_FEEDS:
                 VALUES (%s, %s, %s)
             """, (latest_item.title, latest_item.link, latest_item.published))
             conn.commit()
-    except AttributeError:
-        try:
-            cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
-            if cur.fetchone() is not None:
-                print(f'ALREADY POSTED:{latest_item.title}')
-                continue
-            cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
-            if cur.fetchone() is None:
-                cur.execute("""
-                    INSERT INTO rss_items (title, link, published)
-                    VALUES (%s, %s, %s)
-                """, (latest_item.title, latest_item.link, latest_item.updated))
-                conn.commit()
-        except:
+        else:
+            print(f'ALREADY POSTED:{latest_item.title}')
+            continue
+    if method == 'updated':
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
+        if cur.fetchone() is None:
+            cur.execute("""
+                INSERT INTO rss_items (title, link, published)
+                VALUES (%s, %s, %s)
+            """, (latest_item.title, latest_item.link, latest_item.updated))
+            conn.commit()
+        else:
+            print(f'ALREADY POSTED:{latest_item.title}')
             continue
 
         # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
