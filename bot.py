@@ -22,7 +22,18 @@ links = []
 RSS_FEEDS = [
     "http://www.ruanyifeng.com/blog/atom.xml",
     "https://feeds.appinn.com/appinns/",
-    "https://sspai.com/feed"
+    "https://sspai.com/feed",
+    "https://github.blog/feed/",
+    "https://www.geekpark.net/rss",
+    "https://rsshub.cestlavie.moe/guokr/scientific",
+    "https://irithys.com/index.xml",
+    "https://github.com/casdoor/casdoor/releases.atom",
+    "https://github.com/usememos/memos/releases.atom",
+    "https://github.com/mastodon/mastodon/releases.atom",
+    "https://main.iceco.icu/index.xml",
+    "https://www.cestlavie.moe/index.xml",
+    "https://github.com/Chanzhaoyu/chatgpt-web/releases.atom
+"
 ]
 
 # 连接到PostgreSQL数据库
