@@ -65,6 +65,7 @@ for feed_url in RSS_FEEDS:
     for item in feed.entries:
         try:
                 #print(item.published_parsed)
+                tmp = item.published
                 if latest_item is None or item.published_parsed > latest_item.published_parsed:
                     latest_item = item
         except AttributeError:
