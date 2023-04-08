@@ -2,6 +2,7 @@ import feedparser
 import psycopg2
 import requests
 import os
+import json
 
 # PostgreSQL数据库连接信息，请修改为您的实际信息
 DB_NAME = os.environ['DB_NAME']
@@ -66,7 +67,8 @@ for feed_url in RSS_FEEDS:
         # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
         links.append(latest_item.link)
         titles.append(latest_item.title)
-        post_data = f'{"status": "{latest_item.link} \n {latest_item.title}"}'
+        post_data = {"status": f"{latest_item.link} \n {latest_item.title}"}
+        post_data = json.dumps(post_data)
         result = requests.post(URL, data=post_data)
         print(result.text)
 
