@@ -84,6 +84,8 @@ for feed_url in RSS_FEEDS:
         result = requests.post(URL,data=post_data)
         print(result)
         print(result.text)
+    else:
+        continue
 
 cur.close()
 conn.close()
