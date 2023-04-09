@@ -3,16 +3,6 @@ import psycopg2
 import requests
 import os
 
-# PostgreSQL数据库连接信息，请修改为您的实际信息
-# DB_NAME = os.environ['DB_NAME']
-# DB_USER = os.environ['DB_USER']
-# DB_PASSWORD = os.environ['DB_PASSWORD']
-# DB_HOST = os.environ['DB_HOST']
-# DB_PORT = os.environ['DB_PORT']
-
-# MASTODON_HOST=os.environ['MASTODON_HOST']
-# ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-
 URL = f"https://{os.environ['MASTODON_HOST']}/api/v1/statuses?access_token={os.environ['ACCESS_TOKEN']}"
 
 # RSS源列表，请修改为您需要订阅的RSS源链接
@@ -72,6 +62,7 @@ for feed_url in RSS_FEEDS:
                 if cur.fetchone() is None:
                     print(latest_item.link,end=' ---- ')
                     print(latest_item.title)
+                    # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
                     post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
                     result = requests.post(URL,data=post_data)
                     if result.status_code == 200:
@@ -83,6 +74,9 @@ for feed_url in RSS_FEEDS:
                         conn.commit()
                     else:
                         print(result.text)
+                else:
+                    print(f'ALREADY POSTED:{latest_item.title}')
+                    continue
         elif method == 'updated':
             if latest_item is None or item.updated_parsed > latest_item.updated_parsed or cur.fetchone() is None:
                 latest_item = item
@@ -90,6 +84,7 @@ for feed_url in RSS_FEEDS:
                     print(latest_item.link,end=' ---- ')
                     print(latest_item.title)
                     post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+                    # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
                     result = requests.post(URL,data=post_data)
                     if result.status_code == 200:
                         print(f'POSTED: {latest_item.title}')
@@ -100,51 +95,8 @@ for feed_url in RSS_FEEDS:
                         conn.commit()
                     else:
                         print(result.text)
-    if method == 'published':
-        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
-        if cur.fetchone() is None:
-            # cur.execute("""
-            #     INSERT INTO rss_items (title, link, published)
-            #     VALUES (%s, %s, %s)
-            # """, (latest_item.title, latest_item.link, latest_item.published))
-            # conn.commit()
-            pass
-        else:
-            print(f'ALREADY POSTED:{latest_item.title}')
-            continue
-    if method == 'updated':
-        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
-        if cur.fetchone() is None:
-            # cur.execute("""
-            #     INSERT INTO rss_items (title, link, published)
-            #     VALUES (%s, %s, %s)
-            # """, (latest_item.title, latest_item.link, latest_item.updated))
-            # conn.commit()
-            pass
-        else:
-            print(f'ALREADY POSTED:{latest_item.title}')
-            continue
-
-    # # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
-    # print(latest_item.link,end=' ---- ')
-    # print(latest_item.title)
-    # post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-    # result = requests.post(URL,data=post_data)
-    # if result.status_code == 200:
-    #     print(f'POSTED: {latest_item.title}')
-    #     if method == 'published':
-    #         cur.execute("""
-    #                 INSERT INTO rss_items (title, link, published)
-    #                 VALUES (%s, %s, %s)
-    #             """, (latest_item.title, latest_item.link, latest_item.published))
-    #         conn.commit()
-    #     elif method == 'updated':
-    #         cur.execute("""
-    #             INSERT INTO rss_items (title, link, published)
-    #             VALUES (%s, %s, %s)
-    #         """, (latest_item.title, latest_item.link, latest_item.updated))
-    #         conn.commit()
-    # else:
-    #     print(result.text)
+                else:
+                    print(f'ALREADY POSTED:{latest_item.title}')
+                    continue
 cur.close()
 conn.close()
