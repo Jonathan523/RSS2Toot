@@ -69,35 +69,37 @@ for feed_url in RSS_FEEDS:
         if method == 'published':
             if latest_item is None or item.published_parsed > latest_item.published_parsed or cur.fetchone() is None:
                 latest_item = item
-                print(latest_item.link,end=' ---- ')
-                print(latest_item.title)
-                post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-                result = requests.post(URL,data=post_data)
-                if result.status_code == 200:
-                    print(f'POSTED: {latest_item.title}')
-                    cur.execute("""
-                            INSERT INTO rss_items (title, link, published)
-                            VALUES (%s, %s, %s)
-                        """, (latest_item.title, latest_item.link, latest_item.published))
-                    conn.commit()
-                else:
-                    print(result.text)
+                if cur.fetchone() is None:
+                    print(latest_item.link,end=' ---- ')
+                    print(latest_item.title)
+                    post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+                    result = requests.post(URL,data=post_data)
+                    if result.status_code == 200:
+                        print(f'POSTED: {latest_item.title}')
+                        cur.execute("""
+                                INSERT INTO rss_items (title, link, published)
+                                VALUES (%s, %s, %s)
+                            """, (latest_item.title, latest_item.link, latest_item.published))
+                        conn.commit()
+                    else:
+                        print(result.text)
         elif method == 'updated':
             if latest_item is None or item.updated_parsed > latest_item.updated_parsed or cur.fetchone() is None:
                 latest_item = item
-                print(latest_item.link,end=' ---- ')
-                print(latest_item.title)
-                post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-                result = requests.post(URL,data=post_data)
-                if result.status_code == 200:
-                    print(f'POSTED: {latest_item.title}')
-                    cur.execute("""
-                        INSERT INTO rss_items (title, link, published)
-                        VALUES (%s, %s, %s)
-                    """, (latest_item.title, latest_item.link, latest_item.updated))
-                    conn.commit()
-                else:
-                    print(result.text)
+                if cur.fetchone() is None:
+                    print(latest_item.link,end=' ---- ')
+                    print(latest_item.title)
+                    post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+                    result = requests.post(URL,data=post_data)
+                    if result.status_code == 200:
+                        print(f'POSTED: {latest_item.title}')
+                        cur.execute("""
+                            INSERT INTO rss_items (title, link, published)
+                            VALUES (%s, %s, %s)
+                        """, (latest_item.title, latest_item.link, latest_item.updated))
+                        conn.commit()
+                    else:
+                        print(result.text)
     if method == 'published':
         cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
         if cur.fetchone() is None:
