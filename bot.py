@@ -99,7 +99,7 @@ for feed_url in RSS_FEEDS:
                         else:
                             print(f"POST FAILED: {latest_item.title}")
                             print(result.text)
-                    elif FirstRUN or host_exists:
+                    else:
                         print(f'ADDED TO DATABASE: {latest_item.title}')
                         cur.execute("""
                                 INSERT INTO rss_items (title, link, published)
@@ -129,7 +129,7 @@ for feed_url in RSS_FEEDS:
                         else:
                             print(f"POST FAILED: {latest_item.title}")
                             print(result.text)
-                    elif FirstRUN or host_exists:
+                    else:
                         print(f'ADDED TO DATABASE: {latest_item.title}')
                         cur.execute("""
                             INSERT INTO rss_items (title, link, published)
