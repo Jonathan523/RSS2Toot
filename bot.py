@@ -35,10 +35,9 @@ cur = conn.cursor()
 
 # 判断数据库是否存在
 cur.execute("SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'rss_items')")
-isDBexists = cur.fetchone()
+isDBexists = cur.fetchone()[0]
 print(isDBexists)
-print(isDBexists is None)
-if isDBexists is None:
+if not isDBexists:
     print("First run detected, I will initialize the database and I won't send toots.")
     FirstRUN = True
     # 创建数据库表
