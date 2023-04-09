@@ -26,7 +26,8 @@ RSS_FEEDS = [
     "https://github.com/Chanzhaoyu/chatgpt-web/releases.atom",
     "https://www.ithome.com/rss/",
     "https://blog.cloudflare.com/rss/",
-    "https://www.solidot.org/index.rss"
+    "https://www.solidot.org/index.rss",
+    "https://www.dejavu.moe/index.xml"
 ]
 
 # 连接到 PostgreSQL 数据库
@@ -83,7 +84,7 @@ for feed_url in RSS_FEEDS:
                 if cur.fetchone() is None:
                     # print(latest_item.link,end=' ---- ')
                     # print(latest_item.title)
-                    if not FirstRUN or not host_exists:
+                    if not FirstRUN and not host_exists:
                         # 发送 HTTP POST 请求到 MASTODON_HOST，请求内容为标题和链接
                         post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
                         result = requests.post(URL,data=post_data)
@@ -97,7 +98,7 @@ for feed_url in RSS_FEEDS:
                         else:
                             print(f"POST FAILED: {latest_item.title}")
                             print(result.text)
-                    elif FirstRUN:
+                    elif FirstRUN or host_exists:
                         print(f'ADDED TO DATABASE: {latest_item.title}')
                         cur.execute("""
                                 INSERT INTO rss_items (title, link, published)
@@ -114,7 +115,7 @@ for feed_url in RSS_FEEDS:
                     # print(latest_item.link,end=' ---- ')
                     # print(latest_item.title)
                     post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-                    if not FirstRUN or not host_exists:
+                    if not FirstRUN and not host_exists:
                         # 发送 HTTP POST 请求到 MASTODON_HOST，请求内容为标题和链接
                         result = requests.post(URL,data=post_data)
                         if result.status_code == 200:
@@ -127,7 +128,7 @@ for feed_url in RSS_FEEDS:
                         else:
                             print(f"POST FAILED: {latest_item.title}")
                             print(result.text)
-                    elif FirstRUN:
+                    elif FirstRUN or host_exists:
                         print(f'ADDED TO DATABASE: {latest_item.title}')
                         cur.execute("""
                             INSERT INTO rss_items (title, link, published)
