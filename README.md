@@ -22,6 +22,4 @@ An Python program which uses GitHub Actions to forward RSS feed updates to Masto
    - DB_NAME
    - DB_PORT
    - MASTODON_HOST
-4. Edit bot.py (Line 22-37) to your RSS feed origin
-
-⚠️If you add a new feed origin, please delete the table "rss_items" manually.
+4. Edit bot.py (Line 22-) to your RSS feed origin
