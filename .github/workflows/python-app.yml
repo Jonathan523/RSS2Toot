@@ -15,8 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  RUN:
     runs-on: ubuntu-latest
 
     steps:

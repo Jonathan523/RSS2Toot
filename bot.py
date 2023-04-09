@@ -63,9 +63,9 @@ for feed_url in RSS_FEEDS:
         method = 'published'
     else:
         method = 'updated'
-    print(method)
+    # print(method)
     for item in feed.entries:
-        cur.execute("SELECT id FROM rss_items WHERE link = %s", (item.link))
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (item.link,))
         if method == 'published':
             if latest_item is None or item.published_parsed > latest_item.published_parsed or cur.fetchone() is None:
                 latest_item = item
@@ -99,7 +99,7 @@ for feed_url in RSS_FEEDS:
                 else:
                     print(result.text)
     if method == 'published':
-        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link))
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
         if cur.fetchone() is None:
             # cur.execute("""
             #     INSERT INTO rss_items (title, link, published)
@@ -111,7 +111,7 @@ for feed_url in RSS_FEEDS:
             print(f'ALREADY POSTED:{latest_item.title}')
             continue
     if method == 'updated':
-        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link))
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
         if cur.fetchone() is None:
             # cur.execute("""
             #     INSERT INTO rss_items (title, link, published)
