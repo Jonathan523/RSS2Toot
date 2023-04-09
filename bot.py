@@ -20,7 +20,8 @@ RSS_FEEDS = [
     "https://main.iceco.icu/index.xml",
     "https://www.cestlavie.moe/index.xml",
     "https://github.com/Chanzhaoyu/chatgpt-web/releases.atom",
-    "https://www.ithome.com/rss/"
+    "https://www.ithome.com/rss/",
+    "https://blog.cloudflare.com/rss/"
 ]
 
 # 连接到PostgreSQL数据库
@@ -35,9 +36,7 @@ cur = conn.cursor()
 
 # 判断数据库是否存在
 cur.execute("SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'rss_items')")
-isDBexists = cur.fetchone()[0]
-print(isDBexists)
-if not isDBexists:
+if not cur.fetchone()[0]:
     print("First run detected, I will initialize the database and I won't send toots.")
     FirstRUN = True
     # 创建数据库表
