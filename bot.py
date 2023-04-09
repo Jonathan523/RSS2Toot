@@ -30,7 +30,8 @@ RSS_FEEDS = [
     "https://www.dejavu.moe/index.xml",
     "https://www.ifanr.com/feed",
     "https://ohevan.com/atom.xml",
-    "https://www.9998k.cn/feed/"
+    "https://www.9998k.cn/feed/",
+    "https://dvel.me/index.xml"
 ]
 
 # 连接到 PostgreSQL 数据库
@@ -67,7 +68,10 @@ else:
 # 检查每个 RSS 源的最新项目并将其插入到数据库中
 for feed_url in RSS_FEEDS:
     feed = feedparser.parse(feed_url)
-    print(f'Checking {feed.feed.title} ---- {feed_url}')
+    try:
+        print(f'Checking {feed.feed.title} ---- {feed_url}')
+    except:
+        print(f'Checking {feed_url}')
     latest_item = None
     origin_host = re.search(pattern, feed.entries[0].link, re.IGNORECASE).group(1)
     cur.execute("SELECT EXISTS (SELECT 1 FROM rss_items WHERE link LIKE %s)", ('%'+origin_host+'%',))

@@ -7,19 +7,23 @@ An Python program which uses GitHub Actions to forward RSS feed updates to Masto
 ## Requirements
 
 - A Mastodon Account
+
 - A supabase-based Postgres Database (Or other Postgres Databases)
+
   You can get an account [HERE](https://supabase.com/)
+
+- Mastodon access token (Go to `Settings > Development > New application` to register an application with scope `write:statuses`)
 
 ## Deployment
 
 1. Fork this repo
 2. Go to `Settings > Secrets and variables > Actions > Secrets` and set these three secrets:
-   - DB_PASSWORD
-   - DB_HOST
-   - ACCESS_TOKEN (from Mastodon)
-   - MASTODON_HOST
+   - `DB_PASSWORD`
+   - `DB_HOST`
+   - `ACCESS_TOKEN` (from Mastodon)
+   - `MASTODON_HOST`
 3. Go to `Settings > Secrets and variables > Actions > Variables` and set these four variables:
-   - DB_USER
-   - DB_NAME
-   - DB_PORT
+   - `DB_USER`
+   - `DB_NAME`
+   - `DB_PORT`
 4. Edit bot.py (Line 22-) to your RSS feed origin
