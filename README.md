@@ -2,7 +2,7 @@
 
 An Python program which uses GitHub Actions to forward RSS feed updates to Mastodon
 
-[![Fetch and Sync RSS Feeds](https://github.com/Jonathan523/RSS2Toot/actions/workflows/fetch_and_sync.yml/badge.svg)](https://github.com/Jonathan523/RSS2Toot/actions/workflows/fetch_and_sync.yml)[![Publish Docker image](https://github.com/Jonathan523/RSS2Toot/actions/workflows/publish_docker_image.yml/badge.svg)](https://github.com/Jonathan523/RSS2Toot/actions/workflows/publish_docker_image.yml)![Docker Pulls](https://img.shields.io/docker/pulls/jonathan52306/rss2toot)
+[![Fetch and Sync RSS Feeds](https://github.com/Jonathan523/RSS2Toot/actions/workflows/fetch_and_sync_RSS_feeds.yml/badge.svg)](https://github.com/Jonathan523/RSS2Toot/actions/workflows/fetch_and_sync_RSS_feeds.yml)[![Build and Publish Docker image](https://github.com/Jonathan523/RSS2Toot/actions/workflows/build_and_publish_docker_image.yml/badge.svg)](https://github.com/Jonathan523/RSS2Toot/actions/workflows/build_and_publish_docker_image.yml)![Docker Pulls](https://img.shields.io/docker/pulls/jonathan52306/rss2toot)
 
 ## Requirements
 
