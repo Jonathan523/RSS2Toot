@@ -10,11 +10,11 @@ An Python program which uses GitHub Actions to forward RSS feed updates to Masto
 ## Deployment
 
 1. Fork this repo
-2. Go to `Settings > Actions > Secrets` and set these three secrets:
+2. Go to `Settings > Secrets and variables > Actions > Secrets` and set these three secrets:
    - DB_PASSWORD
    - DB_HOST
    - ACCESS_TOKEN (from Mastodon)
-3. Go to `Settings > Actions > Variables` and set these four variables:
+3. Go to `Settings > Secrets and variables > Actions > Variables` and set these four variables:
    - DB_USER
    - DB_NAME
    - DB_PORT
