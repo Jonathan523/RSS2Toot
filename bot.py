@@ -4,16 +4,16 @@ import requests
 import os
 
 # PostgreSQL数据库连接信息，请修改为您的实际信息
-DB_NAME = os.environ['DB_NAME']
-DB_USER = os.environ['DB_USER']
-DB_PASSWORD = os.environ['DB_PASSWORD']
-DB_HOST = os.environ['DB_HOST']
-DB_PORT = os.environ['DB_PORT']
+# DB_NAME = os.environ['DB_NAME']
+# DB_USER = os.environ['DB_USER']
+# DB_PASSWORD = os.environ['DB_PASSWORD']
+# DB_HOST = os.environ['DB_HOST']
+# DB_PORT = os.environ['DB_PORT']
 
-MASTODON_HOST=os.environ['MASTODON_HOST']
-ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+# MASTODON_HOST=os.environ['MASTODON_HOST']
+# ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 
-URL = f'https://{MASTODON_HOST}/api/v1/statuses?access_token={ACCESS_TOKEN}'
+URL = f"https://{os.environ['MASTODON_HOST']}/api/v1/statuses?access_token={os.environ['ACCESS_TOKEN']}"
 
 # RSS源列表，请修改为您需要订阅的RSS源链接
 RSS_FEEDS = [
@@ -35,11 +35,11 @@ RSS_FEEDS = [
 
 # 连接到PostgreSQL数据库
 conn = psycopg2.connect(
-    dbname=DB_NAME,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    host=DB_HOST,
-    port=DB_PORT
+    dbname=os.environ['DB_NAME'],
+    user=os.environ['DB_USER'],
+    password=os.environ['DB_PASSWORD'],
+    host=os.environ['DB_HOST'],
+    port=os.environ['DB_PORT']
 )
 
 # 创建数据库表
