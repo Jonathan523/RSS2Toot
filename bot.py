@@ -2,10 +2,14 @@ import feedparser
 import psycopg2
 import requests
 import os
+import re
 
 URL = f"https://{os.environ['MASTODON_HOST']}/api/v1/statuses?access_token={os.environ['ACCESS_TOKEN']}"
 
-# RSS源列表，请修改为您需要订阅的RSS源链接
+# 从链接中提取 Hostname 的正则表达式
+pattern = r'^(?:https?:\/\/)?(?:www\.)?([^:\/\n]+)'
+
+# RSS 源列表，请修改为您需要订阅的 RSS 源链接
 RSS_FEEDS = [
     "http://www.ruanyifeng.com/blog/atom.xml",
     "https://feeds.appinn.com/appinns/",
@@ -21,10 +25,11 @@ RSS_FEEDS = [
     "https://www.cestlavie.moe/index.xml",
     "https://github.com/Chanzhaoyu/chatgpt-web/releases.atom",
     "https://www.ithome.com/rss/",
-    "https://blog.cloudflare.com/rss/"
+    "https://blog.cloudflare.com/rss/",
+    "https://www.solidot.org/index.rss"
 ]
 
-# 连接到PostgreSQL数据库
+# 连接到 PostgreSQL 数据库
 conn = psycopg2.connect(
     dbname=os.environ['DB_NAME'],
     user=os.environ['DB_USER'],
@@ -55,11 +60,16 @@ else:
 
 
 
-# 检查每个RSS源的最新项目并将其插入到数据库中
+# 检查每个 RSS 源的最新项目并将其插入到数据库中
 for feed_url in RSS_FEEDS:
-    print(f'Checking {feed_url}')
     feed = feedparser.parse(feed_url)
+    print(f'Checking {feed.feed.title} ---- {feed_url}')
     latest_item = None
+    origin_host = re.search(pattern, feed.entries[0].link, re.IGNORECASE).group(1)
+    cur.execute("SELECT EXISTS (SELECT 1 FROM rss_items WHERE link LIKE %s)", ('%'+origin_host+'%',))
+    host_exists = cur.fetchone()[0]
+    if not host_exists:
+        print("This feed seems to be newly added, I will add them to the database and I won't send toots for this time.")
     if 'published' in str(feed.entries[0].items()):
         method = 'published'
     else:
@@ -73,8 +83,8 @@ for feed_url in RSS_FEEDS:
                 if cur.fetchone() is None:
                     # print(latest_item.link,end=' ---- ')
                     # print(latest_item.title)
-                    if not FirstRUN:
-                        # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
+                    if not FirstRUN or not host_exists:
+                        # 发送 HTTP POST 请求到 MASTODON_HOST，请求内容为标题和链接
                         post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
                         result = requests.post(URL,data=post_data)
                         if result.status_code == 200:
@@ -104,8 +114,8 @@ for feed_url in RSS_FEEDS:
                     # print(latest_item.link,end=' ---- ')
                     # print(latest_item.title)
                     post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-                    if not FirstRUN:
-                        # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
+                    if not FirstRUN or not host_exists:
+                        # 发送 HTTP POST 请求到 MASTODON_HOST，请求内容为标题和链接
                         result = requests.post(URL,data=post_data)
                         if result.status_code == 200:
                             print(f'POSTED: {latest_item.title}')
