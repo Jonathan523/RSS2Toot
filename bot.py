@@ -28,7 +28,9 @@ RSS_FEEDS = [
     "https://blog.cloudflare.com/rss/",
     "https://www.solidot.org/index.rss",
     "https://www.dejavu.moe/index.xml",
-    "https://www.ifanr.com/feed"
+    "https://www.ifanr.com/feed",
+    "https://ohevan.com/atom.xml",
+    "https://www.9998k.cn/feed/"
 ]
 
 # 连接到 PostgreSQL 数据库
@@ -107,7 +109,7 @@ for feed_url in RSS_FEEDS:
                             """, (latest_item.title, latest_item.link, latest_item.published))
                         conn.commit()
                 else:
-                    print(f'ALREADY POSTED:{latest_item.title}')
+                    print(f'ALREADY POSTED: {latest_item.title}')
                     continue
         elif method == 'updated':
             if latest_item is None or item.updated_parsed > latest_item.updated_parsed or cur.fetchone() is None:
@@ -137,7 +139,7 @@ for feed_url in RSS_FEEDS:
                             """, (latest_item.title, latest_item.link, latest_item.updated))
                         conn.commit()
                 else:
-                    print(f'ALREADY POSTED:{latest_item.title}')
+                    print(f'ALREADY POSTED: {latest_item.title}')
                     continue
 cur.close()
 conn.close()
