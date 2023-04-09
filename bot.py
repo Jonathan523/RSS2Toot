@@ -49,7 +49,8 @@ if not cur.fetchone()[0]:
         );
     """)
     conn.commit()
-
+else:
+    FirstRUN = False
 
 
 
