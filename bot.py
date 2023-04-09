@@ -27,7 +27,8 @@ RSS_FEEDS = [
     "https://www.ithome.com/rss/",
     "https://blog.cloudflare.com/rss/",
     "https://www.solidot.org/index.rss",
-    "https://www.dejavu.moe/index.xml"
+    "https://www.dejavu.moe/index.xml",
+    "https://www.ifanr.com/feed"
 ]
 
 # 连接到 PostgreSQL 数据库
@@ -84,7 +85,7 @@ for feed_url in RSS_FEEDS:
                 if cur.fetchone() is None:
                     # print(latest_item.link,end=' ---- ')
                     # print(latest_item.title)
-                    if not FirstRUN and not host_exists:
+                    if not FirstRUN and host_exists:
                         # 发送 HTTP POST 请求到 MASTODON_HOST，请求内容为标题和链接
                         post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
                         result = requests.post(URL,data=post_data)
@@ -115,7 +116,7 @@ for feed_url in RSS_FEEDS:
                     # print(latest_item.link,end=' ---- ')
                     # print(latest_item.title)
                     post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-                    if not FirstRUN and not host_exists:
+                    if not FirstRUN and host_exists:
                         # 发送 HTTP POST 请求到 MASTODON_HOST，请求内容为标题和链接
                         result = requests.post(URL,data=post_data)
                         if result.status_code == 200:
