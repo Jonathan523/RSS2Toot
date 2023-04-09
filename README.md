@@ -17,9 +17,9 @@ An Python program which uses GitHub Actions to forward RSS feed updates to Masto
    - DB_PASSWORD
    - DB_HOST
    - ACCESS_TOKEN (from Mastodon)
+   - MASTODON_HOST
 3. Go to `Settings > Secrets and variables > Actions > Variables` and set these four variables:
    - DB_USER
    - DB_NAME
    - DB_PORT
-   - MASTODON_HOST
 4. Edit bot.py (Line 22-) to your RSS feed origin

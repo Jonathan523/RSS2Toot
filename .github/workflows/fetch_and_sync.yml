@@ -37,5 +37,5 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_NAME: ${{ vars.DB_NAME }}
         DB_PORT: ${{ vars.DB_PORT }}
-        MASTODON_HOST: ${{ vars.MASTODON_HOST }}
+        MASTODON_HOST: ${{ secrets.MASTODON_HOST }}
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
