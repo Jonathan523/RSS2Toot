@@ -2,7 +2,6 @@ import feedparser
 import psycopg2
 import requests
 import os
-import json
 
 # PostgreSQL数据库连接信息，请修改为您的实际信息
 DB_NAME = os.environ['DB_NAME']
@@ -66,47 +65,84 @@ for feed_url in RSS_FEEDS:
         method = 'updated'
     print(method)
     for item in feed.entries:
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (item.link))
         if method == 'published':
-            if latest_item is None or item.published_parsed > latest_item.published_parsed:
+            if latest_item is None or item.published_parsed > latest_item.published_parsed or cur.fetchone() is None:
                 latest_item = item
+                print(latest_item.link,end=' ---- ')
+                print(latest_item.title)
+                post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+                result = requests.post(URL,data=post_data)
+                if result.status_code == 200:
+                    print(f'POSTED: {latest_item.title}')
+                    cur.execute("""
+                            INSERT INTO rss_items (title, link, published)
+                            VALUES (%s, %s, %s)
+                        """, (latest_item.title, latest_item.link, latest_item.published))
+                    conn.commit()
+                else:
+                    print(result.text)
         elif method == 'updated':
-            if latest_item is None or item.updated_parsed > latest_item.updated_parsed:
+            if latest_item is None or item.updated_parsed > latest_item.updated_parsed or cur.fetchone() is None:
                 latest_item = item
+                print(latest_item.link,end=' ---- ')
+                print(latest_item.title)
+                post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+                result = requests.post(URL,data=post_data)
+                if result.status_code == 200:
+                    print(f'POSTED: {latest_item.title}')
+                    cur.execute("""
+                        INSERT INTO rss_items (title, link, published)
+                        VALUES (%s, %s, %s)
+                    """, (latest_item.title, latest_item.link, latest_item.updated))
+                    conn.commit()
+                else:
+                    print(result.text)
     if method == 'published':
-        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link))
         if cur.fetchone() is None:
-            cur.execute("""
-                INSERT INTO rss_items (title, link, published)
-                VALUES (%s, %s, %s)
-            """, (latest_item.title, latest_item.link, latest_item.published))
-            conn.commit()
+            # cur.execute("""
+            #     INSERT INTO rss_items (title, link, published)
+            #     VALUES (%s, %s, %s)
+            # """, (latest_item.title, latest_item.link, latest_item.published))
+            # conn.commit()
+            pass
         else:
             print(f'ALREADY POSTED:{latest_item.title}')
             continue
     if method == 'updated':
-        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link,))
+        cur.execute("SELECT id FROM rss_items WHERE link = %s", (latest_item.link))
         if cur.fetchone() is None:
-            cur.execute("""
-                INSERT INTO rss_items (title, link, published)
-                VALUES (%s, %s, %s)
-            """, (latest_item.title, latest_item.link, latest_item.updated))
-            conn.commit()
+            # cur.execute("""
+            #     INSERT INTO rss_items (title, link, published)
+            #     VALUES (%s, %s, %s)
+            # """, (latest_item.title, latest_item.link, latest_item.updated))
+            # conn.commit()
+            pass
         else:
             print(f'ALREADY POSTED:{latest_item.title}')
             continue
 
-    # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
-    print(latest_item.link,end=' ---- ')
-    print(latest_item.title)
-    # if 'github' in latest_item.link:
-        # post_data = {"status": f"{latest_item.title} \n{latest_item.description} \n{latest_item.link}"}
+    # # 发送HTTP POST请求到MASTODON_HOST，请求内容为标题和链接
+    # print(latest_item.link,end=' ---- ')
+    # print(latest_item.title)
+    # post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
+    # result = requests.post(URL,data=post_data)
+    # if result.status_code == 200:
+    #     print(f'POSTED: {latest_item.title}')
+    #     if method == 'published':
+    #         cur.execute("""
+    #                 INSERT INTO rss_items (title, link, published)
+    #                 VALUES (%s, %s, %s)
+    #             """, (latest_item.title, latest_item.link, latest_item.published))
+    #         conn.commit()
+    #     elif method == 'updated':
+    #         cur.execute("""
+    #             INSERT INTO rss_items (title, link, published)
+    #             VALUES (%s, %s, %s)
+    #         """, (latest_item.title, latest_item.link, latest_item.updated))
+    #         conn.commit()
     # else:
-        # post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-    post_data = {"status": f"{latest_item.title} \n{latest_item.link}"}
-    result = requests.post(URL,data=post_data)
-    if result.status_code == 200:
-        print(f'POSTED: {latest_item.title}')
-    else:
-        print(result.text)
+    #     print(result.text)
 cur.close()
 conn.close()
