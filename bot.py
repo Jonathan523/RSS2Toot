@@ -24,7 +24,6 @@ RSS_FEEDS = [
     "https://main.iceco.icu/index.xml",
     "https://www.cestlavie.moe/index.xml",
     "https://github.com/Chanzhaoyu/chatgpt-web/releases.atom",
-    "https://www.ithome.com/rss/",
     "https://blog.cloudflare.com/rss/",
     "https://www.solidot.org/index.rss",
     "https://www.dejavu.moe/index.xml",
