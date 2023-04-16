@@ -30,7 +30,11 @@ RSS_FEEDS = [
     "https://www.ifanr.com/feed",
     "https://ohevan.com/atom.xml",
     "https://www.9998k.cn/feed/",
-    "https://dvel.me/index.xml"
+    "https://dvel.me/index.xml",
+    "https://diygod.me/feed/xml",
+    "https://rsshub.app/amazon/awsblogs/en_US",
+    "https://rsshub.app/amazon/awsblogs",
+    "https://blog.innei.ren/feed/xml"
 ]
 
 # 连接到 PostgreSQL 数据库
