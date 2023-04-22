@@ -34,7 +34,8 @@ RSS_FEEDS = [
     "https://diygod.me/feed/xml",
     "https://rsshub.app/amazon/awsblogs/en_US",
     "https://rsshub.app/amazon/awsblogs",
-    "https://blog.innei.ren/feed/xml"
+    "https://blog.innei.ren/feed/xml",
+    "https://immmmm.com/atom.xml"
 ]
 
 # 连接到 PostgreSQL 数据库
