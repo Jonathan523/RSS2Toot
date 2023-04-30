@@ -8,10 +8,7 @@ COPY . /app
 WORKDIR /app
 
 # 更新 pip，并安装 requirements.txt 中列出的所有依赖项
-RUN apk add --no-cache postgresql-libs && \
-    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
-    pip install --no-cache-dir -r requirements.txt && \
-    apk --purge del .build-deps
+RUN pip install --no-cache-dir -r requirements.txt
 
 # 在容器启动时运行 bot.py
 CMD ["python3", "bot.py"]
